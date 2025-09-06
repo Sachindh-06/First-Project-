@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'display': ['Orbitron', 'monospace'],
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -22,10 +26,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          glow: "hsl(var(--secondary-glow))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -57,6 +63,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      backgroundImage: {
+        'cosmic': 'var(--gradient-cosmic)',
+        'nebula': 'var(--gradient-nebula)',
+        'stellar': 'var(--gradient-stellar)',
+        'planet': 'var(--gradient-planet)',
+      },
+      boxShadow: {
+        'cosmic': 'var(--shadow-cosmic)',
+        'glow': 'var(--shadow-glow)',
+        'planet': 'var(--shadow-planet)',
       },
       borderRadius: {
         lg: "var(--radius)",
