@@ -14,7 +14,212 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_logs: {
+        Row: {
+          answer: string
+          id: string
+          language: string | null
+          question: string
+          timestamp: string
+          user_id: string
+        }
+        Insert: {
+          answer: string
+          id?: string
+          language?: string | null
+          question: string
+          timestamp?: string
+          user_id: string
+        }
+        Update: {
+          answer?: string
+          id?: string
+          language?: string | null
+          question?: string
+          timestamp?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      missions: {
+        Row: {
+          agency: string
+          created_at: string
+          description: string | null
+          id: string
+          mission_date: string | null
+          name: string
+          objective: string | null
+          status: string | null
+        }
+        Insert: {
+          agency: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          mission_date?: string | null
+          name: string
+          objective?: string | null
+          status?: string | null
+        }
+        Update: {
+          agency?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          mission_date?: string | null
+          name?: string
+          objective?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
+      planets: {
+        Row: {
+          created_at: string
+          description: string | null
+          distance_from_earth: string | null
+          id: string
+          image_url: string | null
+          name: string
+          planet_type: string | null
+          size_comparison: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          distance_from_earth?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          planet_type?: string | null
+          size_comparison?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          distance_from_earth?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          planet_type?: string | null
+          size_comparison?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_results: {
+        Row: {
+          id: string
+          quiz_id: string
+          score: number
+          submitted_at: string
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          quiz_id: string
+          score: number
+          submitted_at?: string
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          id?: string
+          quiz_id?: string
+          score?: number
+          submitted_at?: string
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_results_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes: {
+        Row: {
+          category: string | null
+          correct_option: string
+          created_at: string
+          difficulty: string | null
+          id: string
+          option_a: string
+          option_b: string
+          option_c: string
+          option_d: string
+          question: string
+        }
+        Insert: {
+          category?: string | null
+          correct_option: string
+          created_at?: string
+          difficulty?: string | null
+          id?: string
+          option_a: string
+          option_b: string
+          option_c: string
+          option_d: string
+          question: string
+        }
+        Update: {
+          category?: string | null
+          correct_option?: string
+          created_at?: string
+          difficulty?: string | null
+          id?: string
+          option_a?: string
+          option_b?: string
+          option_c?: string
+          option_d?: string
+          question?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
