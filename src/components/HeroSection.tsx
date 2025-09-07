@@ -33,7 +33,7 @@ const HeroSection = () => {
           {/* Main Heading */}
           <div className="space-y-4">
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-gradient animate-fade-in">
-              SpaceTech Explorer
+              OrbitX Tech
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '0.2s' }}>
               NASA & ISRO Data at Your Fingertips

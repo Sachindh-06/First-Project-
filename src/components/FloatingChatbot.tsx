@@ -59,7 +59,7 @@ const FloatingChatbot = () => {
     <>
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 w-80 h-96 bg-card border border-border rounded-lg shadow-cosmic z-50 flex flex-col">
+        <div className="fixed bottom-20 right-4 w-100 min-h-120 bg-card border border-border rounded-lg shadow-cosmic z-50 flex flex-col max-h-[90vh]">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border bg-primary rounded-t-lg">
             <div className="flex items-center gap-2">

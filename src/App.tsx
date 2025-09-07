@@ -9,6 +9,9 @@ import LiveTracker from "./pages/LiveTracker";
 import MissionTimeline from "./pages/MissionTimeline";
 import Quiz from "./pages/Quiz";
 import NotFound from "./pages/NotFound";
+import SolarSystem from "./pages/SolarSystem";
+import Exoplanets from "./pages/Exoplanets";
+import Galaxies from "./pages/Galaxies";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +27,9 @@ const App = () => (
           <Route path="/tracker" element={<LiveTracker />} />
           <Route path="/missions" element={<MissionTimeline />} />
           <Route path="/quizzes" element={<Quiz />} />
+          <Route path="/solar-system" element={<SolarSystem />} />
+          <Route path="/exoplanets" element={<Exoplanets />} />
+          <Route path="/galaxies" element={<Galaxies />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

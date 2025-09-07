@@ -25,7 +25,7 @@ export const Navigation = () => {
           <Link to="/" className="flex items-center space-x-2">
             <Rocket className="h-8 w-8 text-primary" />
             <span className="text-xl font-display font-bold text-gradient">
-              SpaceTech Explorer
+              OrbitX Tech
             </span>
           </Link>
 
