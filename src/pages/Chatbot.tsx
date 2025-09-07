@@ -82,25 +82,55 @@ export default function Chatbot() {
   const generateResponse = (question: string): string => {
     const lowerQuestion = question.toLowerCase();
     
+    // Greeting and introduction
+    if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi') || lowerQuestion.includes('cosmo')) {
+      return "Hello there, space explorer! 🚀 I'm Cosmo, your friendly AI space assistant! I'm here to guide you through the wonders of our incredible universe. What cosmic mystery would you like to explore today?";
+    }
+
     // Planet-related questions
-    if (lowerQuestion.includes('planet') || lowerQuestion.includes('mars') || 
-        lowerQuestion.includes('earth') || lowerQuestion.includes('jupiter')) {
+    if (lowerQuestion.includes('planet')) {
       const planets = knowledgeBase.planets;
       if (lowerQuestion.includes('mars')) {
         const mars = planets.find(p => p.name.toLowerCase() === 'mars');
-        return mars ? `Mars is ${mars.description} It's located ${mars.distance_from_earth} from Earth and is ${mars.size_comparison} in size.` 
-                   : "Mars is the fourth planet from the Sun, known as the Red Planet due to its rusty color.";
+        return mars ? `🔴 Mars - The Red Planet! ${mars.description} Fun fact: Mars has the largest volcano in our solar system - Olympus Mons, which is 3 times taller than Mount Everest! ${mars.distance_from_earth} away, Mars continues to fascinate us with its potential for past life.` 
+                   : "🔴 Mars - The Red Planet! This fascinating world is our celestial neighbor, with rusty iron oxide giving it that distinctive red color. Mars has polar ice caps, massive canyons, and evidence of ancient rivers. Could it have harbored life? That's what we're trying to discover!";
       }
       if (lowerQuestion.includes('earth')) {
         const earth = planets.find(p => p.name.toLowerCase() === 'earth');
-        return earth ? earth.description : "Earth is our home planet, the only known planet with life.";
+        return earth ? `🌍 Earth - Our Beautiful Blue Marble! ${earth.description} What makes Earth special? It's in the perfect 'Goldilocks Zone' - not too hot, not too cold, but just right for liquid water and life to flourish!` 
+                    : "🌍 Earth - Our Beautiful Blue Marble! The only known planet with life, Earth is a cosmic oasis with vast oceans, diverse ecosystems, and a protective atmosphere. We're incredibly lucky to call this spinning rock our home!";
       }
       if (lowerQuestion.includes('jupiter')) {
         const jupiter = planets.find(p => p.name.toLowerCase() === 'jupiter');
-        return jupiter ? `Jupiter is ${jupiter.description} It's ${jupiter.distance_from_earth} from Earth.` 
-                      : "Jupiter is the largest planet in our solar system, a gas giant with many moons.";
+        return jupiter ? `🪐 Jupiter - The King of Planets! ${jupiter.description} This gas giant acts as our solar system's protector, using its massive gravity to deflect asteroids and comets away from Earth. It has over 80 moons, including the four amazing Galilean moons!` 
+                      : "🪐 Jupiter - The King of Planets! This massive gas giant could fit all other planets inside it! With its Great Red Spot (a storm larger than Earth) and 80+ moons, Jupiter is like a mini solar system of its own.";
       }
-      return `Our solar system has 8 planets: ${knowledgeBase.planets.map(p => p.name).join(', ')}. Which planet would you like to know more about?`;
+      return `Our solar system family has 8 incredible planets: ${knowledgeBase.planets.map(p => p.name).join(', ')}. Each one tells a unique story of cosmic evolution! Which planet's secrets would you like me to reveal? 🌟`;
+    }
+
+    // Galaxy and cosmic structure questions
+    if (lowerQuestion.includes('galaxy') || lowerQuestion.includes('milky way')) {
+      return "🌌 Galaxies are island universes of stars! Our home, the Milky Way, contains over 200 billion stars and is spiraling through space at 600 km/s! We're neighbors with Andromeda Galaxy, which is speeding toward us for a cosmic collision in 4.5 billion years - don't worry, it'll be spectacular, not destructive!";
+    }
+
+    // Stars and stellar phenomena
+    if (lowerQuestion.includes('star') || lowerQuestion.includes('sun') || lowerQuestion.includes('supernova')) {
+      return "⭐ Stars are cosmic furnaces where hydrogen becomes helium, creating the light and energy that powers our universe! Our Sun is a middle-aged star that's been shining for 4.6 billion years. When massive stars die, they explode as supernovas - cosmic fireworks that scatter elements needed for planets and life!";
+    }
+
+    // Black holes
+    if (lowerQuestion.includes('black hole')) {
+      return "🕳️ Black holes are the universe's ultimate mysteries! These cosmic vacuum cleaners have gravity so strong that nothing - not even light - can escape. But here's the mind-bending part: they're not actually holes, they're incredibly dense objects that warp spacetime itself! The supermassive black hole at our galaxy's center is 4 million times heavier than our Sun!";
+    }
+
+    // Big Bang and cosmology
+    if (lowerQuestion.includes('big bang') || lowerQuestion.includes('universe')) {
+      return "💥 The Big Bang wasn't an explosion in space - it was an explosion OF space! 13.8 billion years ago, our entire universe started smaller than a dot and expanded faster than light. Today, we can still detect the afterglow of that moment as cosmic microwave background radiation. Mind-blowing, right?";
+    }
+
+    // Exoplanets
+    if (lowerQuestion.includes('exoplanet') || lowerQuestion.includes('other worlds')) {
+      return "🪐 Exoplanets are worlds beyond our solar system, and we've discovered over 5,000 of them! Some orbit in the 'habitable zone' where liquid water could exist. The James Webb Space Telescope is analyzing their atmospheres, searching for signs of life. We might not be alone in this vast cosmic ocean!";
     }
 
     // Mission-related questions
@@ -109,39 +139,40 @@ export default function Chatbot() {
       const missions = knowledgeBase.missions;
       if (lowerQuestion.includes('chandrayaan')) {
         const chandrayaan = missions.find(m => m.name.toLowerCase().includes('chandrayaan'));
-        return chandrayaan ? `${chandrayaan.name} was an ${chandrayaan.agency} mission launched on ${new Date(chandrayaan.mission_date).toLocaleDateString()}. ${chandrayaan.description}` 
-                          : "Chandrayaan-3 was India's successful lunar mission that achieved a soft landing on the Moon's south pole.";
+        return chandrayaan ? `🇮🇳 ${chandrayaan.name} - India's incredible lunar achievement! Launched by ${chandrayaan.agency} on ${new Date(chandrayaan.mission_date).toLocaleDateString()}. ${chandrayaan.description} This mission made India the fourth country to soft-land on the Moon and the first to reach the lunar south pole!` 
+                          : "🇮🇳 Chandrayaan-3 - India's historic Moon mission! This incredible achievement made India the first nation to successfully land near the Moon's south pole, where water ice might be hiding in permanently shadowed craters. A proud moment for space exploration!";
       }
       if (lowerQuestion.includes('isro')) {
         const isroMissions = missions.filter(m => m.agency === 'ISRO');
-        return `ISRO has conducted several notable missions including: ${isroMissions.map(m => m.name).join(', ')}. Which mission interests you most?`;
+        return `🇮🇳 ISRO (Indian Space Research Organisation) is doing amazing work! Their missions include: ${isroMissions.map(m => m.name).join(', ')}. From Mars missions to lunar landings, ISRO proves that great science knows no boundaries. Which mission would you like to explore?`;
       }
-      return `Here are some notable space missions: ${missions.slice(0, 3).map(m => `${m.name} (${m.agency})`).join(', ')}. What would you like to know about them?`;
+      return `🚀 Space missions are humanity's greatest adventures! Here are some incredible journeys: ${missions.slice(0, 3).map(m => `${m.name} (${m.agency})`).join(', ')}. Each mission expands our cosmic horizon and inspires the next generation of explorers!`;
     }
 
     // ISS questions
     if (lowerQuestion.includes('iss') || lowerQuestion.includes('space station')) {
-      return "The International Space Station (ISS) is a space laboratory orbiting Earth at about 408 km altitude. It travels at 17,500 mph and completes an orbit every 90 minutes. You can track it live in our Live Tracker section!";
+      return "🛰️ The International Space Station is humanity's outpost in space! Orbiting 408 km above us at 28,000 km/h, it completes one orbit every 90 minutes. Astronauts conduct incredible experiments in microgravity that help us understand everything from medicine to materials science. You can track it live in our Live Tracker - wave when it passes over! 👋";
     }
 
-    // General space questions
-    if (lowerQuestion.includes('space') || lowerQuestion.includes('universe')) {
-      return "Space is vast and mysterious! Our universe contains billions of galaxies, each with billions of stars. We've discovered thousands of exoplanets and continue exploring through missions like James Webb Space Telescope.";
+    // Space exploration general
+    if (lowerQuestion.includes('space') || lowerQuestion.includes('exploration')) {
+      return "🚀 Space exploration is humanity's greatest adventure! From Sputnik's first beep to rovers on Mars, from lunar footsteps to images from the edge of the observable universe - we're constantly pushing the boundaries of what's possible. Every mission teaches us something new about our cosmic neighborhood and our place in it!";
     }
 
     // Quiz questions
     if (lowerQuestion.includes('quiz') || lowerQuestion.includes('test')) {
-      return "Test your space knowledge with our interactive quiz! You can find questions about planets, missions, and space technology. Head to the Quiz section to get started.";
+      return "🧠 Ready to test your cosmic knowledge? Our interactive quiz has mind-bending questions about planets, missions, and space phenomena! Challenge yourself and see how much you've learned about our amazing universe. Head to the Quiz section and let's see if you're ready for astronaut training! 🎯";
     }
 
-    // Default responses
-    const defaultResponses = [
-      "That's an interesting question! I can help you learn about planets, space missions, the ISS, and more. Try asking about Mars, ISRO missions, or the International Space Station.",
-      "I'm here to help you explore the wonders of space! Ask me about any planet in our solar system, space missions, or astronomical phenomena.",
-      "Great question! I have knowledge about planets, space agencies like ISRO and NASA, satellites, and space exploration. What would you like to discover?",
+    // Default responses with Cosmo personality
+    const cosmoResponses = [
+      "🌟 That's a fascinating question, fellow space explorer! I love curiosity like yours. I can guide you through planets, stars, galaxies, black holes, space missions, and cosmic phenomena. What corner of the universe shall we explore together?",
+      "✨ Excellent question! As your space guide, I'm here to help you discover the wonders of our universe - from tiny particles to massive galaxies, from Earth's backyard to the cosmic horizon. What cosmic mystery intrigues you most?",
+      "🚀 Great question, space adventurer! I'm equipped with knowledge about planets, stellar evolution, space missions from NASA and ISRO, cosmic phenomena, and so much more. Let's embark on a journey through space and time - where would you like to start?",
+      "🌌 I love your curiosity! The universe is full of incredible stories - from the birth of stars to the dance of galaxies, from robotic explorers on Mars to the search for life beyond Earth. What aspect of our cosmic story would you like me to share?"
     ];
     
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+    return cosmoResponses[Math.floor(Math.random() * cosmoResponses.length)];
   };
 
   const translateToHindi = (text: string): string => {
@@ -238,11 +269,11 @@ export default function Chatbot() {
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-6xl font-orbitron font-bold mb-4">
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Space Assistant
+              Cosmo 🚀
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Ask me anything about planets, space missions, and exploration
+            Your friendly AI space assistant - exploring the universe together, one question at a time!
           </p>
         </div>
 
@@ -251,7 +282,7 @@ export default function Chatbot() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl font-orbitron flex items-center gap-2">
                 <Bot className="h-6 w-6 text-primary" />
-                OrbitX Assistant
+                Cosmo - Space Assistant
               </CardTitle>
               <div className="flex items-center gap-2">
                 <Globe className="h-4 w-4" />
@@ -275,8 +306,8 @@ export default function Chatbot() {
                   <Bot className="h-12 w-12 text-primary mx-auto mb-4" />
                   <p className="text-muted-foreground">
                     {language === "hindi" 
-                      ? "नमस्ते! मैं आपका अंतरिक्ष सहायक हूं। कुछ भी पूछें!"
-                      : "Hello! I'm your space assistant. Ask me anything about space!"}
+                      ? "नमस्ते! मैं कॉस्मो हूं, आपका मित्रवत अंतरिक्ष सहायक! 🚀 ब्रह्मांड के रहस्यों को जानें!"
+                      : "Hello! I'm Cosmo, your friendly space assistant! 🚀 Let's explore the wonders of the universe together!"}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 max-w-md mx-auto">
                     <Button
