@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, BookOpen, Rocket, Satellite, Globe, ChevronRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
+import FloatingChatbot from "@/components/FloatingChatbot";
 
 interface Planet {
   id: string;
@@ -290,6 +291,7 @@ export default function Knowledge() {
           </div>
         </div>
       </div>
+      <FloatingChatbot />
     </div>
   );
 }

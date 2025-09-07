@@ -4,16 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import SolarSystem from "./pages/SolarSystem";
-import Exoplanets from "./pages/Exoplanets";
-import Galaxies from "./pages/Galaxies";
 import Knowledge from "./pages/Knowledge";
 import LiveTracker from "./pages/LiveTracker";
 import MissionTimeline from "./pages/MissionTimeline";
 import Quiz from "./pages/Quiz";
-import Chatbot from "./pages/Chatbot";
-import Profile from "./pages/Profile";
-import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,16 +20,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/solar-system" element={<SolarSystem />} />
-          <Route path="/exoplanets" element={<Exoplanets />} />
-          <Route path="/galaxies" element={<Galaxies />} />
           <Route path="/knowledge" element={<Knowledge />} />
           <Route path="/tracker" element={<LiveTracker />} />
           <Route path="/missions" element={<MissionTimeline />} />
           <Route path="/quizzes" element={<Quiz />} />
-          <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/auth" element={<Auth />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

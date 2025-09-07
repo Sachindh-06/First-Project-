@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Rocket, Target, Building } from "lucide-react";
+import Navigation from "@/components/Navigation";
+import FloatingChatbot from "@/components/FloatingChatbot";
 
 interface Mission {
   id: string;
@@ -75,7 +77,9 @@ export default function MissionTimeline() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-space pt-20 p-4">
+    <div className="min-h-screen bg-cosmic">
+      <Navigation />
+      <div className="pt-20 p-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-orbitron font-bold mb-4">
@@ -193,8 +197,10 @@ export default function MissionTimeline() {
               <p className="text-sm text-muted-foreground">ISRO Missions</p>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
+      <FloatingChatbot />
     </div>
   );
 }

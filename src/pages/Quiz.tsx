@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
-import { Trophy, Clock, User, RotateCcw } from "lucide-react";
-import { AuthForm } from "@/components/AuthForm";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { Brain, CheckCircle, XCircle, Rocket, RotateCcw } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import Navigation from '@/components/Navigation';
+import FloatingChatbot from '@/components/FloatingChatbot';
 
 interface QuizQuestion {
   id: string;
@@ -17,343 +20,345 @@ interface QuizQuestion {
   option_d: string;
   correct_option: string;
   category: string;
+  difficulty: string;
+  created_at: string;
 }
 
-interface QuizResult {
-  id: string;
-  score: number;
-  total_questions: number;
-  submitted_at: string;
-}
-
-export default function Quiz() {
-  const { user, isAuthenticated } = useAuth();
+const Quiz = () => {
   const { toast } = useToast();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [score, setScore] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<QuizResult[]>([]);
-  const [timeLeft, setTimeLeft] = useState(30); // 30 seconds per question
   const [quizStarted, setQuizStarted] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchQuizResults();
+    if (quizStarted) {
+      loadRandomQuestions();
     }
-  }, [isAuthenticated]);
+  }, [quizStarted]);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (quizStarted && !quizCompleted && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && !quizCompleted) {
-      handleNextQuestion();
-    }
-    return () => clearTimeout(timer);
-  }, [timeLeft, quizStarted, quizCompleted]);
-
-  const fetchQuizResults = async () => {
+  const loadRandomQuestions = async () => {
     try {
-      const { data, error } = await supabase
-        .from('quiz_results')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('submitted_at', { ascending: false })
-        .limit(5);
-
-      if (error) throw error;
-      setResults(data || []);
-    } catch (error) {
-      console.error('Error fetching quiz results:', error);
-    }
-  };
-
-  const startQuiz = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
+      const { data: allQuizzes, error } = await supabase
         .from('quizzes')
-        .select('*')
-        .limit(5)
-        .order('created_at', { ascending: false });
+        .select('*');
 
       if (error) throw error;
-      
-      // Shuffle questions
-      const shuffled = (data || []).sort(() => Math.random() - 0.5);
-      setQuestions(shuffled);
-      setQuizStarted(true);
-      setCurrentQuestionIndex(0);
-      setAnswers([]);
-      setQuizCompleted(false);
-      setScore(0);
-      setTimeLeft(30);
+
+      if (allQuizzes && allQuizzes.length > 0) {
+        // Shuffle and take 5 random questions
+        const shuffled = [...allQuizzes].sort(() => Math.random() - 0.5);
+        setQuestions(shuffled.slice(0, 5));
+      }
     } catch (error) {
-      console.error('Error starting quiz:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load quiz questions",
-        variant: "destructive",
-      });
+      console.error('Error loading questions:', error);
+      // Fallback questions if database is unavailable
+      setQuestions([
+        {
+          id: '1',
+          question: 'Which planet is known as the Red Planet?',
+          option_a: 'Venus',
+          option_b: 'Mars',
+          option_c: 'Jupiter',
+          option_d: 'Saturn',
+          correct_option: 'option_b',
+          category: 'planets',
+          difficulty: 'easy',
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '2',
+          question: 'What is the largest planet in our solar system?',
+          option_a: 'Earth',
+          option_b: 'Saturn',
+          option_c: 'Jupiter',
+          option_d: 'Neptune',
+          correct_option: 'option_c',
+          category: 'planets',
+          difficulty: 'easy',
+          created_at: new Date().toISOString()
+        },
+        {
+          id: '3',
+          question: 'Which space agency launched the Chandrayaan missions?',
+          option_a: 'NASA',
+          option_b: 'ESA',
+          option_c: 'ISRO',
+          option_d: 'SpaceX',
+          correct_option: 'option_c',
+          category: 'missions',
+          difficulty: 'medium',
+          created_at: new Date().toISOString()
+        }
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleNextQuestion = async () => {
-    const newAnswers = [...answers, selectedAnswer];
-    setAnswers(newAnswers);
+  const submitQuiz = async () => {
+    const score = calculateScore();
+    setShowResults(true);
+    
+    toast({
+      title: "Quiz Completed!",
+      description: `You scored ${score}/${questions.length}! Try again for new questions.`,
+    });
+  };
 
-    if (currentQuestionIndex === questions.length - 1) {
-      // Quiz completed
-      const finalScore = newAnswers.reduce((score, answer, index) => {
-        return score + (answer === questions[index]?.correct_option ? 1 : 0);
-      }, 0);
-      
-      setScore(finalScore);
-      setQuizCompleted(true);
-      
-      // Save result to database
-      try {
-        const { error } = await supabase
-          .from('quiz_results')
-          .insert({
-            user_id: user?.id,
-            quiz_id: questions[0]?.id, // Use first question's ID as reference
-            score: finalScore,
-            total_questions: questions.length,
-          });
+  const calculateScore = () => {
+    return selectedAnswers.reduce((score, answer, index) => {
+      return score + (answer === questions[index]?.correct_option ? 1 : 0);
+    }, 0);
+  };
 
-        if (error) throw error;
-        
-        toast({
-          title: "Quiz Completed!",
-          description: `You scored ${finalScore}/${questions.length}`,
-        });
-        
-        fetchQuizResults();
-      } catch (error) {
-        console.error('Error saving quiz result:', error);
-      }
-    } else {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer("");
-      setTimeLeft(30);
+  const handleAnswerSelect = (answer: string) => {
+    const newAnswers = [...selectedAnswers];
+    newAnswers[currentQuestion] = answer;
+    setSelectedAnswers(newAnswers);
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    }
+  };
+
+  const prevQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(prev => prev - 1);
     }
   };
 
   const resetQuiz = () => {
+    setQuestions([]);
+    setCurrentQuestion(0);
+    setSelectedAnswers([]);
+    setShowResults(false);
     setQuizStarted(false);
-    setQuizCompleted(false);
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer("");
-    setAnswers([]);
-    setScore(0);
-    setTimeLeft(30);
+    setLoading(false);
   };
 
-  if (!isAuthenticated) {
-    return <AuthForm onSuccess={() => window.location.reload()} />;
+  const startQuiz = () => {
+    setQuizStarted(true);
+    setLoading(true);
+  };
+
+  if (!quizStarted) {
+    return (
+      <div className="min-h-screen bg-cosmic">
+        <Navigation />
+        <div className="pt-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center py-16">
+              <h1 className="font-display text-4xl md:text-6xl font-bold text-gradient mb-6">
+                Space Quizzes
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Test your knowledge about space, planets, missions, and cosmic phenomena. 
+                New questions every time you play!
+              </p>
+              
+              <Card className="planet-card max-w-lg mx-auto">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 justify-center">
+                    <Brain className="h-6 w-6 text-primary" />
+                    Ready to Test Your Knowledge?
+                  </CardTitle>
+                  <CardDescription>
+                    5 randomized questions about space exploration
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="text-left space-y-2 text-sm text-muted-foreground mb-6">
+                    <li>• Questions about planets, missions, and space technology</li>
+                    <li>• Randomized questions each time you play</li>
+                    <li>• Immediate feedback on your answers</li>
+                    <li>• No account required - just pure learning fun!</li>
+                  </ul>
+                  <Button onClick={startQuiz} className="btn-cosmic w-full">
+                    <Rocket className="mr-2 h-5 w-5" />
+                    Start Quiz
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+        <FloatingChatbot />
+      </div>
+    );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
-
-  return (
-    <div className="min-h-screen bg-gradient-space pt-20 p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-orbitron font-bold mb-4">
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Space Quiz
-            </span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Test your knowledge about planets, missions, and space exploration
-          </p>
-        </div>
-
-        {!quizStarted ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Start Quiz */}
-            <Card className="bg-card/80 backdrop-blur-sm border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-2xl font-orbitron">Ready to Explore?</CardTitle>
-                <CardDescription>
-                  Challenge yourself with 5 randomized questions about space
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="text-sm text-muted-foreground">
-                    <p>• 5 questions per quiz</p>
-                    <p>• 30 seconds per question</p>
-                    <p>• Questions about planets, missions, and space tech</p>
-                    <p>• Your progress is tracked and saved</p>
-                  </div>
-                  <Button
-                    onClick={startQuiz}
-                    disabled={loading}
-                    className="w-full"
-                    size="lg"
-                  >
-                    {loading ? "Loading..." : "Start Quiz"}
-                  </Button>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-cosmic">
+        <Navigation />
+        <div className="pt-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto">
+            <Card className="planet-card">
+              <CardContent className="py-16">
+                <div className="text-center">
+                  <Brain className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
+                  <h2 className="text-xl font-semibold mb-2">Loading Questions...</h2>
+                  <p className="text-muted-foreground">Preparing your space quiz</p>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Previous Results */}
-            <Card className="bg-card/80 backdrop-blur-sm border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-2xl font-orbitron flex items-center gap-2">
-                  <Trophy className="h-6 w-6 text-primary" />
-                  Your Results
-                </CardTitle>
-                <CardDescription>
-                  Track your quiz performance over time
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {results.length > 0 ? (
-                  <div className="space-y-3">
-                    {results.map((result) => (
-                      <div
-                        key={result.id}
-                        className="flex items-center justify-between p-3 bg-primary/10 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium">
-                            {result.score}/{result.total_questions}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(result.submitted_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge
-                          variant={result.score >= result.total_questions * 0.8 ? "default" : "secondary"}
-                        >
-                          {Math.round((result.score / result.total_questions) * 100)}%
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground text-center py-4">
-                    No quiz results yet. Take your first quiz!
-                  </p>
-                )}
               </CardContent>
             </Card>
           </div>
-        ) : quizCompleted ? (
-          <Card className="bg-card/80 backdrop-blur-sm border-primary/20 max-w-2xl mx-auto">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-orbitron text-primary">
-                Quiz Completed!
-              </CardTitle>
-              <CardDescription>
-                Here are your results
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center space-y-6">
-                <div className="text-6xl font-bold text-primary">
-                  {score}/{questions.length}
-                </div>
-                <div>
-                  <Badge
-                    variant={score >= questions.length * 0.8 ? "default" : "secondary"}
+        </div>
+        <FloatingChatbot />
+      </div>
+    );
+  }
+
+  if (showResults) {
+    const score = calculateScore();
+    const percentage = Math.round((score / questions.length) * 100);
+    
+    return (
+      <div className="min-h-screen bg-cosmic">
+        <Navigation />
+        <div className="pt-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto">
+            <Card className="planet-card">
+              <CardHeader className="text-center">
+                <CardTitle className="text-3xl font-display text-gradient mb-2">
+                  Quiz Complete!
+                </CardTitle>
+                <CardDescription>Here's how you did</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="text-center">
+                  <div className="text-6xl font-bold text-primary mb-4">
+                    {score}/{questions.length}
+                  </div>
+                  <Badge 
+                    variant={percentage >= 80 ? "default" : percentage >= 60 ? "secondary" : "outline"}
                     className="text-lg px-4 py-2"
                   >
-                    {Math.round((score / questions.length) * 100)}%
+                    {percentage}%
                   </Badge>
                 </div>
-                <div className="space-y-2">
-                  {score === questions.length && (
-                    <p className="text-green-400 font-medium">Perfect Score! 🚀</p>
-                  )}
-                  {score >= questions.length * 0.8 && score < questions.length && (
-                    <p className="text-blue-400 font-medium">Excellent Work! 🌟</p>
-                  )}
-                  {score >= questions.length * 0.6 && score < questions.length * 0.8 && (
-                    <p className="text-yellow-400 font-medium">Good Job! 👍</p>
-                  )}
-                  {score < questions.length * 0.6 && (
-                    <p className="text-orange-400 font-medium">Keep Learning! 📚</p>
-                  )}
-                </div>
-                <Button onClick={resetQuiz} className="w-full" size="lg">
-                  <RotateCcw className="mr-2 h-5 w-5" />
-                  Take Another Quiz
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="bg-card/80 backdrop-blur-sm border-primary/20 max-w-2xl mx-auto">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl font-orbitron">
-                    Question {currentQuestionIndex + 1} of {questions.length}
-                  </CardTitle>
-                  <Badge variant="outline" className="mt-2">
-                    {currentQuestion?.category}
-                  </Badge>
-                </div>
-                <div className="text-center">
-                  <div className="flex items-center gap-2 text-primary">
-                    <Clock className="h-5 w-5" />
-                    <span className="text-2xl font-bold">{timeLeft}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">seconds</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {currentQuestion && (
-                <div className="space-y-6">
-                  <h3 className="text-lg font-medium">{currentQuestion.question}</h3>
-                  
-                  <div className="space-y-3">
-                    {[
-                      { key: 'A', text: currentQuestion.option_a },
-                      { key: 'B', text: currentQuestion.option_b },
-                      { key: 'C', text: currentQuestion.option_c },
-                      { key: 'D', text: currentQuestion.option_d },
-                    ].map((option) => (
-                      <button
-                        key={option.key}
-                        onClick={() => setSelectedAnswer(option.key)}
-                        className={`w-full p-4 text-left rounded-lg border transition-all ${
-                          selectedAnswer === option.key
-                            ? 'border-primary bg-primary/20'
-                            : 'border-primary/20 hover:border-primary/40'
+
+                {/* Answer Review */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-center">Review Your Answers</h3>
+                  {questions.map((q, index) => {
+                    const isCorrect = selectedAnswers[index] === q.correct_option;
+                    return (
+                      <div 
+                        key={q.id}
+                        className={`p-4 rounded-lg border ${
+                          isCorrect ? 'border-green-500/50 bg-green-500/10' : 'border-red-500/50 bg-red-500/10'
                         }`}
                       >
-                        <span className="font-medium text-primary">{option.key}.</span> {option.text}
-                      </button>
-                    ))}
-                  </div>
-
-                  <Button
-                    onClick={handleNextQuestion}
-                    disabled={!selectedAnswer}
-                    className="w-full"
-                    size="lg"
-                  >
-                    {currentQuestionIndex === questions.length - 1 ? "Finish Quiz" : "Next Question"}
-                  </Button>
+                        <div className="flex items-start gap-2">
+                          {isCorrect ? (
+                            <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                          ) : (
+                            <XCircle className="h-5 w-5 text-red-500 mt-1 flex-shrink-0" />
+                          )}
+                          <div className="flex-1">
+                            <p className="font-medium mb-2">{q.question}</p>
+                            <p className="text-sm text-muted-foreground">
+                              Correct answer: {q[q.correct_option as keyof QuizQuestion]}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+
+                <Button onClick={resetQuiz} className="btn-cosmic w-full">
+                  <RotateCcw className="mr-2 h-5 w-5" />
+                  Try Again with New Questions
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        <FloatingChatbot />
       </div>
+    );
+  }
+
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const question = questions[currentQuestion];
+
+  return (
+    <div className="min-h-screen bg-cosmic">
+      <Navigation />
+      <div className="pt-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          <Card className="planet-card">
+            <CardHeader>
+              <div className="flex items-center justify-between mb-4">
+                <Badge variant="outline">{question?.category}</Badge>
+                <span className="text-sm text-muted-foreground">
+                  Question {currentQuestion + 1} of {questions.length}
+                </span>
+              </div>
+              <Progress value={progress} className="mb-4" />
+              <CardTitle className="text-xl">{question?.question}</CardTitle>
+            </CardHeader>
+            
+            <CardContent>
+              <RadioGroup 
+                value={selectedAnswers[currentQuestion] || ""} 
+                onValueChange={handleAnswerSelect}
+                className="space-y-3"
+              >
+                {['option_a', 'option_b', 'option_c', 'option_d'].map((option, index) => (
+                  <div key={option} className="flex items-center space-x-2">
+                    <RadioGroupItem value={option} id={option} />
+                    <Label htmlFor={option} className="flex-1 cursor-pointer">
+                      <span className="font-medium text-primary mr-2">
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                      {question?.[option as keyof QuizQuestion]}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </CardContent>
+
+            <CardFooter className="flex justify-between">
+              <Button 
+                variant="outline" 
+                onClick={prevQuestion}
+                disabled={currentQuestion === 0}
+              >
+                Previous
+              </Button>
+              
+              {currentQuestion === questions.length - 1 ? (
+                <Button 
+                  onClick={submitQuiz}
+                  disabled={!selectedAnswers[currentQuestion]}
+                  className="btn-cosmic"
+                >
+                  Submit Quiz
+                </Button>
+              ) : (
+                <Button 
+                  onClick={nextQuestion}
+                  disabled={!selectedAnswers[currentQuestion]}
+                  className="btn-cosmic"
+                >
+                  Next
+                </Button>
+              )}
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
+      <FloatingChatbot />
     </div>
   );
-}
+};
+
+export default Quiz;

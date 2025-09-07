@@ -33,16 +33,16 @@ const HeroSection = () => {
           {/* Main Heading */}
           <div className="space-y-4">
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-gradient animate-fade-in">
-              OrbitX Tech
+              SpaceTech Explorer
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              Explore Planets Beyond Our World
+              NASA & ISRO Data at Your Fingertips
             </p>
           </div>
 
           {/* Description */}
           <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            Discover the wonders of our Solar System, explore distant exoplanets, and venture into the mysteries of other galaxies. Your journey through the cosmos begins here.
+            Explore real-time space data, discover NASA's daily astronomy pictures, track missions from ISRO and NASA, and chat with Cosmo, your AI space guide.
           </p>
 
           {/* CTA Buttons */}
