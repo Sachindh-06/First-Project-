@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import SolarSystem from "./pages/SolarSystem";
 import Exoplanets from "./pages/Exoplanets";
 import Galaxies from "./pages/Galaxies";
+import View from "./pages/View";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/solar-system" element={<SolarSystem />} />
           <Route path="/exoplanets" element={<Exoplanets />} />
           <Route path="/galaxies" element={<Galaxies />} />
+          <Route path="/Explore-the-Space" element={<View />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

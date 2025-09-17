@@ -264,7 +264,7 @@ export default function Chatbot() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-space pt-20 p-4">
+    <div className=" bg-gradient-space pt-20 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-6xl font-orbitron font-bold mb-4">
@@ -300,7 +300,7 @@ export default function Chatbot() {
           
           <CardContent className="flex-1 flex flex-col">
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+            <div className="h-auto bg-red-400 space-y-4 mb-4 pr-2">
               {messages.length === 0 ? (
                 <div className="text-center py-8">
                   <Bot className="h-12 w-12 text-primary mx-auto mb-4" />

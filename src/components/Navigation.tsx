@@ -13,6 +13,7 @@ export const Navigation = () => {
     { name: "Live Tracker", path: "/tracker" },
     { name: "Mission Timeline", path: "/missions" },
     { name: "Quizzes", path: "/quizzes" },
+    { name: "Explore-the-Space", path: "/Explore-the-Space" },
   ];
 
   const isActive = (path: string) => location.pathname === path;

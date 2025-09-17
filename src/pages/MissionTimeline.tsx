@@ -135,8 +135,8 @@ export default function MissionTimeline() {
                   >
                     <Card className="bg-card/80 backdrop-blur-sm border border-primary/30 shadow-lg hover:shadow-primary/30 transition-all duration-300">
                       <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg font-orbitron text-primary-foreground">
+                        <div className="flex items-center justify-between text-white">
+                          <CardTitle className="text-lg font-orbitron text-white">
                             {mission.name}
                           </CardTitle>
                           <Badge className={getAgencyColor(mission.agency)}>
