@@ -15,6 +15,7 @@ import Galaxies from "./pages/Galaxies";
 import View from "./pages/View";
 import SpaceAgriculture from "./pages/Agriculture";
 import NearestCelestial from "./pages/NearestCelestial";
+import AppFeedback from "./components/AppFeedback";
 
 
 
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/Explore-the-Space" element={<View />} />
           <Route path="/Debries-Detector" element={<DebrisDetector />} />
           <Route path="/nearest" element={<NearestCelestial />} />
+          <Route path="/feedback" element={<AppFeedback />} />
           {/* <Route path="/Space-Agriculture" element={<SpaceAgriculture />} /> */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
