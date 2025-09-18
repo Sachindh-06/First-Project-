@@ -15,6 +15,7 @@ export const Navigation = () => {
     { name: "Quizzes", path: "/quizzes" },
     { name: "Explore-the-Space", path: "/Explore-the-Space" },
     { name: "Debries Detector", path: "/Debries-Detector" },
+    { name: "Libraries", path: "/nearest" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
