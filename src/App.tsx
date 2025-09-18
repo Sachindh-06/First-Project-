@@ -13,6 +13,20 @@ import SolarSystem from "./pages/SolarSystem";
 import Exoplanets from "./pages/Exoplanets";
 import Galaxies from "./pages/Galaxies";
 import View from "./pages/View";
+import SpaceAgriculture from "./pages/Agriculture";
+
+
+
+
+function DebrisDetector() {
+  return (
+    <iframe
+      src="https://debris-sphere.vercel.app/"
+      style={{ width: "100%", height: "100vh", border: "none" }}
+      title="Debris Detector"
+    />
+  );
+}
 
 const queryClient = new QueryClient();
 
@@ -32,6 +46,8 @@ const App = () => (
           <Route path="/exoplanets" element={<Exoplanets />} />
           <Route path="/galaxies" element={<Galaxies />} />
           <Route path="/Explore-the-Space" element={<View />} />
+          <Route path="/Debries-Detector" element={<DebrisDetector />} />
+          {/* <Route path="/Space-Agriculture" element={<SpaceAgriculture />} /> */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
