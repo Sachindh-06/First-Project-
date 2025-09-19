@@ -35,7 +35,7 @@ function Hey() {
   return (
     <iframe
     className="-mt-12"
-      src="https://wheretheiss.at/"
+      src="https://verdant-parfait-13999e.netlify.app/"
       style={{ width: "100%", height: "100vh", border: "none" }}
       title="Debris Detector"
     />
@@ -63,7 +63,9 @@ const App = () => (
           <Route path="/Explore-the-Space" element={<View />} />
           <Route path="/Debries-Detector" element={<DebrisDetector />} />
           <Route path="/nearest" element={<NearestCelestial />} />
-          <Route path="/Spot-ISS" element={<Hey />} />
+          {/* <Route path="/space" element={<SpotISS />} /> */}
+          <Route path="/Spot-ISS" element={<Hey />} /> 
+
           <Route path="/feedback" element={<AppFeedback />} />
           {/* <Route path="/Space-Agriculture" element={<SpaceAgriculture />} /> */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
