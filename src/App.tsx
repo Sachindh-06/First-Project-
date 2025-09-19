@@ -13,7 +13,7 @@ import SolarSystem from "./pages/SolarSystem";
 import Exoplanets from "./pages/Exoplanets";
 import Galaxies from "./pages/Galaxies";
 import View from "./pages/View";
-import SpaceAgriculture from "./pages/Agriculture";
+// import SpaceAgriculture from "./pages/Agriculture";
 import NearestCelestial from "./pages/NearestCelestial";
 import AppFeedback from "./components/AppFeedback";
 
@@ -29,6 +29,19 @@ function DebrisDetector() {
     />
   );
 }
+
+
+function Hey() {
+  return (
+    <iframe
+    className="-mt-12"
+      src="https://wheretheiss.at/"
+      style={{ width: "100%", height: "100vh", border: "none" }}
+      title="Debris Detector"
+    />
+  );
+}
+
 
 const queryClient = new QueryClient();
 
@@ -50,6 +63,7 @@ const App = () => (
           <Route path="/Explore-the-Space" element={<View />} />
           <Route path="/Debries-Detector" element={<DebrisDetector />} />
           <Route path="/nearest" element={<NearestCelestial />} />
+          <Route path="/Spot-ISS" element={<Hey />} />
           <Route path="/feedback" element={<AppFeedback />} />
           {/* <Route path="/Space-Agriculture" element={<SpaceAgriculture />} /> */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

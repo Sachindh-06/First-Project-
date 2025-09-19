@@ -16,6 +16,7 @@ export const Navigation = () => {
     { name: "Explore-the-Space", path: "/Explore-the-Space" },
     { name: "Debries Detector", path: "/Debries-Detector" },
     { name: "Libraries", path: "/nearest" },
+    { name: "Spot-ISS", path: "/Spot-ISS" },
     { name: "FeedBack", path: "/feedback" },
   ];
 
