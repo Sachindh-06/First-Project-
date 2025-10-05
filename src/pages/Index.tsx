@@ -15,10 +15,7 @@ const Index = () => {
         {/* NASA Daily Image Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            {/* <NASAImage /> */}
-            <img src="https://images.pexels.com/photos/41162/moon-landing-apollo-11-nasa-buzz-aldrin-41162.jpeg?cs=srgb&dl=pexels-pixabay-41162.jpg&fm=jpg" alt="" 
-            className="w-full"
-            />
+            <NASAImage />
           </div>
         </section>
 

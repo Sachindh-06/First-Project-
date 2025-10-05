@@ -1,5 +1,6 @@
-// SpaceDataOverview.tsx
 import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Navigation from "@/components/Navigation";
 
 type Section = {
   title: string;
@@ -82,33 +83,60 @@ const SECTIONS: Section[] = [
   },
 ];
 
-export default function SpaceDataOverview() {
+const NearestCelestial = () => {
   return (
-    <div className="bg-gray-900 text-white min-h-screen p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Space Data Overview</h1>
-      <p className="text-gray-400 text-center mb-12">
-        All data below is static for demo purposes. In a real app, it can be fetched from a live API.
-      </p>
-
-      <div className="max-w-5xl mx-auto space-y-8">
-        {SECTIONS.map((section) => (
-          <div
-            key={section.title}
-            className="bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-indigo-500/50 transition-all duration-300 flex flex-col md:flex-row gap-6 items-center"
-          >
-            <img
-              src={section.imageUrl}
-              alt={section.title}
-              className="w-full md:w-48 h-32 md:h-32 object-cover rounded-lg shadow-md"
-            />
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold mb-2">{section.title}</h2>
-              <p className="text-gray-300">{section.description}</p>
-              
-            </div>
+    <div className="min-h-screen bg-cosmic">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-gradient mb-4">
+              Space Data Libraries
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Comprehensive space data from launches, missions, astronauts, and more. 
+              All data below is static for demo purposes. In a real app, it can be fetched from a live API.
+            </p>
           </div>
-        ))}
-      </div>
+        </div>
+      </section>
+
+      {/* Data Sections */}
+      <section className="pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SECTIONS.map((section, index) => (
+              <Card 
+                key={section.title}
+                className="planet-card group hover-lift animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <CardHeader className="pb-4">
+                  <CardTitle className="font-display text-lg group-hover:text-primary transition-colors">
+                    {section.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="aspect-video rounded-lg overflow-hidden">
+                    <img
+                      src={section.imageUrl}
+                      alt={section.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {section.description}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
-}
+};
+
+export default NearestCelestial;
